@@ -36,4 +36,19 @@ library OrderTypes {
     // uint8 v: parameter (27 or 28), bytes32 r, bytes32 s
     bytes sig;
   }
+
+  struct SimpleOrder {
+    bool isSellOrder;
+    address signer;
+    uint256 price;
+    uint256 endTime;
+    uint256 minBpsToSeller;
+    uint256 nonce;
+    address collection;
+    uint256 tokenId;
+    uint256 numTokens;
+    address currency;
+    // bytes32 r, bytes32 s, uint8 v: parameter (27 or 28), 
+    bytes sig;
+  }
 }

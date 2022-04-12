@@ -30,6 +30,35 @@ export interface ExtraParams {
   buyer?: string;
 }
 
+export interface SimpleOrder {
+  id: string;
+  chainId: BigNumberish;
+  isSellOrder: boolean;
+  signerAddress: string;
+  price: BigNumberish;
+  endTime: BigNumberish;
+  minBpsToSeller: BigNumberish;
+  nonce: BigNumberish;
+  collection: string;
+  tokenId: BigNumberish;
+  numTokens: BigNumberish;
+  currency: string;
+}
+
+export interface SignedSimpleOrder {
+  isSellOrder: boolean;
+  signer: string;
+  price: BigNumberish;
+  endTime: BigNumberish;
+  minBpsToSeller: BigNumberish;
+  nonce: BigNumberish;
+  collection: string;
+  tokenId: BigNumberish;
+  numTokens: BigNumberish;
+  currency: string;
+  sig: BytesLike;
+}
+
 export interface OBOrder {
   id: string;
   chainId: BigNumberish;
@@ -145,6 +174,47 @@ export const calculateSignedOrderPriceAt = (timestamp: BigNumber, order: SignedO
   return currentPrice;
 };
 
+export async function prepareSimpleOrder(
+  user: User,
+  chainId: BigNumberish,
+  signer: JsonRpcSigner,
+  order: SimpleOrder,
+  infinityExchange: Contract,
+  infinityFeeTreasuryAddress: string
+): Promise<SignedSimpleOrder | undefined> {
+  // check if order is still valid
+  const validOrder = await isSimpleOrderValid(user, order, infinityExchange, signer);
+  if (!validOrder) {
+    return undefined;
+  }
+
+  // grant approvals
+  const approvals = await grantApprovalsForSimpleOrder(
+    user,
+    order,
+    signer,
+    infinityExchange.address,
+    infinityFeeTreasuryAddress
+  );
+  if (!approvals) {
+    return undefined;
+  }
+
+  // sign order
+  const signedSimpleOrder = await signSimpleOrder(chainId, infinityExchange.address, order, signer);
+
+  console.log('Verifying signature');
+  console.log('verifying signed Order', signedSimpleOrder);
+  const isSigValid = await infinityExchange.verifyOrderSig(signedSimpleOrder);
+  if (!isSigValid) {
+    console.error('Signature is invalid');
+    return undefined;
+  } else {
+    console.log('Signature is valid');
+  }
+  return signedSimpleOrder;
+}
+
 // Orderbook orders
 export async function prepareOBOrder(
   user: User,
@@ -180,6 +250,41 @@ export async function prepareOBOrder(
   return signedOBOrder;
 }
 
+export async function isSimpleOrderValid(
+  user: User,
+  order: SimpleOrder,
+  infinityExchange: Contract,
+  signer: JsonRpcSigner
+): Promise<boolean> {
+  // check timestamps
+  const endTime = BigNumber.from(order.endTime);
+  const now = nowSeconds();
+  if (now.gt(endTime)) {
+    console.error('Order timestamps are not valid');
+    return false;
+  }
+
+  // check if nonce is valid
+  const isNonceValid = await infinityExchange.isNonceValid(user.address, order.nonce);
+  console.log('Nonce valid:', isNonceValid);
+  if (!isNonceValid) {
+    console.error('Order nonce is not valid');
+    return false;
+  }
+
+  // check on chain ownership
+  if (order.isSellOrder) {
+    const contract = new Contract(order.collection, erc721Abi, signer);
+    const isCurrentOwner = await checkERC721Ownership(user, contract, order.tokenId);
+    if (!isCurrentOwner) {
+      return false;
+    }
+  }
+
+  // default
+  return true;
+}
+
 export async function isOrderValid(
   user: User,
   order: OBOrder,
@@ -187,7 +292,6 @@ export async function isOrderValid(
   signer: JsonRpcSigner
 ): Promise<boolean> {
   // check timestamps
-  const startTime = BigNumber.from(order.startTime);
   const endTime = BigNumber.from(order.endTime);
   const now = nowSeconds();
   if (now.gt(endTime)) {
@@ -213,6 +317,29 @@ export async function isOrderValid(
 
   // default
   return true;
+}
+
+export async function grantApprovalsForSimpleOrder(
+  user: User,
+  order: SimpleOrder,
+  signer: JsonRpcSigner,
+  exchange: string,
+  infinityFeeTreasuryAddress: string
+): Promise<boolean> {
+  try {
+    console.log('Granting approvals');
+    if (!order.isSellOrder) {
+      // approve currencies
+      await approveERC20(user.address, order.currency, order.price, signer, infinityFeeTreasuryAddress);
+    } else {
+      // approve collections
+      await approveERC721Simple(user.address, order.collection, signer, exchange);
+    }
+    return true;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
 }
 
 export async function grantApprovals(
@@ -270,6 +397,23 @@ export async function approveERC20(
   }
 }
 
+export async function approveERC721Simple(user: string, collection: string, signer: JsonRpcSigner, exchange: string) {
+  try {
+    console.log('Granting ERC721 approval');
+    const contract = new Contract(collection, erc721Abi, signer);
+    const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
+    if (!isApprovedForAll) {
+      await contract.setApprovalForAll(exchange, true);
+    } else {
+      console.log('Already approved for all');
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    console.error('failed granting erc721 approvals');
+    throw new Error(e);
+  }
+}
+
 export async function approveERC721(user: string, items: OrderItem[], signer: JsonRpcSigner, exchange: string) {
   try {
     console.log('Granting ERC721 approval');
@@ -317,6 +461,60 @@ export async function checkERC721Ownership(user: User, contract: Contract, token
     return false;
   }
   return true;
+}
+
+export async function signSimpleOrder(
+  chainId: BigNumberish,
+  contractAddress: string,
+  order: SimpleOrder,
+  signer: JsonRpcSigner
+): Promise<SignedSimpleOrder | undefined> {
+  const domain = {
+    name: 'InfinityExchangeSimple',
+    version: '1',
+    chainId: chainId,
+    verifyingContract: contractAddress
+  };
+
+  const types = {
+    SimpleOrder: [
+      { name: 'isSellOrder', type: 'bool' },
+      { name: 'signer', type: 'address' },
+      { name: 'price', type: 'uint256' },
+      { name: 'endTime', type: 'uint256' },
+      { name: 'minBpsToSeller', type: 'uint256' },
+      { name: 'nonce', type: 'uint256' },
+      { name: 'collection', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+      { name: 'numTokens', type: 'uint256' },
+      { name: 'currency', type: 'address' }
+    ]
+  };
+
+  const orderToSign = {
+    isSellOrder: order.isSellOrder,
+    signer: order.signerAddress,
+    price: order.price,
+    endTime: order.endTime,
+    minBpsToSeller: order.minBpsToSeller,
+    nonce: order.nonce,
+    collection: order.collection,
+    tokenId: order.tokenId,
+    numTokens: order.numTokens,
+    currency: order.currency
+  };
+
+  // sign order
+  try {
+    console.log('Signing order');
+    const sig = await signer._signTypedData(domain, types, orderToSign);
+    const splitSig = splitSignature(sig ?? '');
+    const encodedSig = defaultAbiCoder.encode(['bytes32', 'bytes32', 'uint8'], [splitSig.r, splitSig.s, splitSig.v]);
+    const signedOrder: SignedSimpleOrder = { ...orderToSign, sig: encodedSig };
+    return signedOrder;
+  } catch (e) {
+    console.error('Error signing order', e);
+  }
 }
 
 export async function signOBOrder(

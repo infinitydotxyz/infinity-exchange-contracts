@@ -41,8 +41,8 @@ export default {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 99999999
-            // runs: 1 // todo: set to 99999999
+            // runs: 99999999
+            runs: 1 // todo: set to 99999999
           }
         }
       }
