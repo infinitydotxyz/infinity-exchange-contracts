@@ -5,66 +5,67 @@ import { erc721Abi } from '../abi/erc721';
 import { nowSeconds, trimLowerCase } from '@infinityxyz/lib/utils';
 import { erc20Abi } from '../abi/erc20';
 import { JsonRpcSigner } from '@ethersproject/providers';
+import { OBOrder, ChainOBOrder, ExecParams, ExtraParams, OBOrderItem, OBTokenInfo } from '@infinityxyz/lib/types/core';
 
 // types
 export type User = {
   address: string;
 };
 
-export interface TokenInfo {
-  tokenId: BigNumberish;
-  numTokens: BigNumberish;
-}
+// export interface TokenInfo {
+//   tokenId: BigNumberish;
+//   numTokens: BigNumberish;
+// }
 
-export interface OrderItem {
-  collection: string;
-  tokens: TokenInfo[];
-}
+// export interface OrderItem {
+//   collection: string;
+//   tokens: TokenInfo[];
+// }
 
-export interface ExecParams {
-  complicationAddress: string;
-  currencyAddress: string;
-}
+// export interface ExecParams {
+//   complicationAddress: string;
+//   currencyAddress: string;
+// }
 
-export interface ExtraParams {
-  buyer?: string;
-}
+// export interface ExtraParams {
+//   buyer?: string;
+// }
 
-export interface OBOrder {
-  id: string;
-  chainId: BigNumberish;
-  isSellOrder: boolean;
-  signerAddress: string;
-  numItems: BigNumberish;
-  startPrice: BigNumberish;
-  endPrice: BigNumberish;
-  startTime: BigNumberish;
-  endTime: BigNumberish;
-  minBpsToSeller: BigNumberish;
-  nonce: BigNumberish;
-  nfts: OrderItem[];
-  execParams: ExecParams;
-  extraParams: ExtraParams;
-}
+// export interface OBOrder {
+//   id: string;
+//   chainId: BigNumberish;
+//   isSellOrder: boolean;
+//   signerAddress: string;
+//   numItems: BigNumberish;
+//   startPrice: BigNumberish;
+//   endPrice: BigNumberish;
+//   startTime: BigNumberish;
+//   endTime: BigNumberish;
+//   minBpsToSeller: BigNumberish;
+//   nonce: BigNumberish;
+//   nfts: OrderItem[];
+//   execParams: ExecParams;
+//   extraParams: ExtraParams;
+// }
 
-export interface SignedOBOrder {
-  isSellOrder: boolean;
-  signer: string;
-  constraints: BigNumberish[];
-  nfts: OrderItem[];
-  execParams: string[];
-  extraParams: BytesLike;
-  sig: BytesLike;
-}
+// export interface ChainOBOrder {
+//   isSellOrder: boolean;
+//   signer: string;
+//   constraints: BigNumberish[];
+//   nfts: OrderItem[];
+//   execParams: string[];
+//   extraParams: BytesLike;
+//   sig: BytesLike;
+// }
 
 // constants
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
-export const getCurrentOrderPrice = (order: OBOrder): BigNumber => {
-  const startTime = BigNumber.from(order.startTime);
-  const endTime = BigNumber.from(order.endTime);
-  const startPrice = BigNumber.from(order.startPrice);
-  const endPrice = BigNumber.from(order.endPrice);
+export const getCurrentOrderPrice = (order: Partial<OBOrder>): BigNumber => {
+  const startTime = BigNumber.from(order.startTimeMs);
+  const endTime = BigNumber.from(order.endTimeMs);
+  const startPrice = BigNumber.from(order.startPriceWei);
+  const endPrice = BigNumber.from(order.endPriceWei);
   const duration = endTime.sub(startTime);
   let priceDiff = BigNumber.from(0);
   if (startPrice.gt(endPrice)) {
@@ -75,7 +76,7 @@ export const getCurrentOrderPrice = (order: OBOrder): BigNumber => {
   if (priceDiff.eq(0) || duration.eq(0)) {
     return startPrice;
   }
-  const elapsedTime = BigNumber.from(nowSeconds()).sub(startTime);
+  const elapsedTime = BigNumber.from(Date.now()).sub(startTime.toNumber());
   const precision = 10000;
   const portion = elapsedTime.gt(duration) ? 1 : elapsedTime.mul(precision).div(duration);
   priceDiff = priceDiff.mul(portion).div(precision);
@@ -88,7 +89,7 @@ export const getCurrentOrderPrice = (order: OBOrder): BigNumber => {
   return currentPrice;
 };
 
-export const getCurrentSignedOrderPrice = (order: SignedOBOrder): BigNumber => {
+export const getCurrentSignedOrderPrice = (order: ChainOBOrder): BigNumber => {
   const startPrice = BigNumber.from(order.constraints[1]);
   const endPrice = BigNumber.from(order.constraints[2]);
   const startTime = BigNumber.from(order.constraints[3]);
@@ -116,7 +117,7 @@ export const getCurrentSignedOrderPrice = (order: SignedOBOrder): BigNumber => {
   return currentPrice;
 };
 
-export const calculateSignedOrderPriceAt = (timestamp: BigNumber, order: SignedOBOrder): BigNumber => {
+export const calculateSignedOrderPriceAt = (timestamp: BigNumber, order: ChainOBOrder): BigNumber => {
   const startPrice = BigNumber.from(order.constraints[1]);
   const endPrice = BigNumber.from(order.constraints[2]);
   const startTime = BigNumber.from(order.constraints[3]);
@@ -150,10 +151,10 @@ export async function prepareOBOrder(
   user: User,
   chainId: BigNumberish,
   signer: JsonRpcSigner,
-  order: OBOrder,
+  order: Partial<OBOrder>,
   infinityExchange: Contract,
   infinityFeeTreasuryAddress: string
-): Promise<SignedOBOrder | undefined> {
+): Promise<ChainOBOrder | undefined> {
   // check if order is still valid
   const validOrder = await isOrderValid(user, order, infinityExchange, signer);
   if (!validOrder) {
@@ -167,29 +168,29 @@ export async function prepareOBOrder(
   }
 
   // sign order
-  const signedOBOrder = await signOBOrder(chainId, infinityExchange.address, order, signer);
+  const chainOBOrder = await signOBOrder(chainId, infinityExchange.address, order, signer);
 
   console.log('Verifying signature');
-  const isSigValid = await infinityExchange.verifyOrderSig(signedOBOrder);
+  const isSigValid = await infinityExchange.verifyOrderSig(chainOBOrder);
   if (!isSigValid) {
     console.error('Signature is invalid');
     return undefined;
   } else {
     console.log('Signature is valid');
   }
-  return signedOBOrder;
+  return chainOBOrder;
 }
 
 export async function isOrderValid(
   user: User,
-  order: OBOrder,
+  order: Partial<OBOrder>,
   infinityExchange: Contract,
   signer: JsonRpcSigner
 ): Promise<boolean> {
   // check timestamps
-  const startTime = BigNumber.from(order.startTime);
-  const endTime = BigNumber.from(order.endTime);
-  const now = nowSeconds();
+  const startTime = BigNumber.from(order.startTimeMs);
+  const endTime = BigNumber.from(order.endTimeMs);
+  const now = BigNumber.from(Date.now());
   if (now.gt(endTime)) {
     console.error('Order timestamps are not valid');
     return false;
@@ -217,7 +218,7 @@ export async function isOrderValid(
 
 export async function grantApprovals(
   user: User,
-  order: OBOrder,
+  order: Partial<OBOrder>,
   signer: JsonRpcSigner,
   exchange: string,
   infinityFeeTreasuryAddress: string
@@ -270,11 +271,11 @@ export async function approveERC20(
   }
 }
 
-export async function approveERC721(user: string, items: OrderItem[], signer: JsonRpcSigner, exchange: string) {
+export async function approveERC721(user: string, items: OBOrderItem[], signer: JsonRpcSigner, exchange: string) {
   try {
     console.log('Granting ERC721 approval');
     for (const item of items) {
-      const collection = item.collection;
+      const collection = item.collectionAddress;
       const contract = new Contract(collection, erc721Abi, signer);
       const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
       if (!isApprovedForAll) {
@@ -290,11 +291,11 @@ export async function approveERC721(user: string, items: OrderItem[], signer: Js
   }
 }
 
-export async function checkOnChainOwnership(user: User, order: OBOrder, signer: JsonRpcSigner): Promise<boolean> {
+export async function checkOnChainOwnership(user: User, order: Partial<OBOrder>, signer: JsonRpcSigner): Promise<boolean> {
   console.log('Checking on chain ownership');
   let result = true;
   for (const nft of order.nfts) {
-    const collection = nft.collection;
+    const collection = nft.collectionAddress;
     const contract = new Contract(collection, erc721Abi, signer);
     for (const token of nft.tokens) {
       result = result && (await checkERC721Ownership(user, contract, token.tokenId));
@@ -322,9 +323,9 @@ export async function checkERC721Ownership(user: User, contract: Contract, token
 export async function signOBOrder(
   chainId: BigNumberish,
   contractAddress: string,
-  order: OBOrder,
+  order: Partial<OBOrder>,
   signer: JsonRpcSigner
-): Promise<SignedOBOrder | undefined> {
+): Promise<ChainOBOrder | undefined> {
   const domain = {
     name: 'InfinityExchange',
     version: '1',
@@ -355,21 +356,38 @@ export async function signOBOrder(
 
   const constraints = [
     order.numItems,
-    order.startPrice,
-    order.endPrice,
-    order.startTime,
-    order.endTime,
+    order.startPriceWei,
+    order.endPriceWei,
+    Math.floor(order.startTimeMs / 1000),
+    Math.floor(order.endTimeMs / 1000),
     order.minBpsToSeller,
     order.nonce
   ];
+
+  const nfts = [];
+  for (const nft of order.nfts) {
+    const collection = nft.collectionAddress;
+    const tokens = [];
+    for (const token of nft.tokens) {
+      tokens.push({
+        tokenId: token.tokenId,
+        numTokens: token.numTokens
+      });
+    }
+    nfts.push({
+      collection,
+      tokens
+    });
+  }
+
   const execParams = [order.execParams.complicationAddress, order.execParams.currencyAddress];
   const extraParams = defaultAbiCoder.encode(['address'], [order.extraParams.buyer ?? NULL_ADDRESS]);
 
   const orderToSign = {
     isSellOrder: order.isSellOrder,
-    signer: order.signerAddress,
+    signer: order.makerAddress,
     constraints,
-    nfts: order.nfts,
+    nfts,
     execParams,
     extraParams
   };
@@ -378,11 +396,11 @@ export async function signOBOrder(
 
   // sign order
   try {
-    console.log('Signing order');
+    console.log('Signing order', orderToSign);
     const sig = await signer._signTypedData(domain, types, orderToSign);
     const splitSig = splitSignature(sig ?? '');
     const encodedSig = defaultAbiCoder.encode(['bytes32', 'bytes32', 'uint8'], [splitSig.r, splitSig.s, splitSig.v]);
-    const signedOrder: SignedOBOrder = { ...orderToSign, sig: encodedSig };
+    const signedOrder: ChainOBOrder = { ...orderToSign, sig: encodedSig };
     return signedOrder;
   } catch (e) {
     console.error('Error signing order', e);
@@ -392,7 +410,7 @@ export async function signOBOrder(
 export async function signFormattedOrder(
   chainId: BigNumberish,
   contractAddress: string,
-  order: SignedOBOrder,
+  order: ChainOBOrder,
   signer: JsonRpcSigner
 ): Promise<string> {
   const domain = {
@@ -458,13 +476,30 @@ function _getCalculatedDigest(chainId: BigNumberish, exchangeAddr: string, order
 
   const constraints = [
     order.numItems,
-    order.startPrice,
-    order.endPrice,
-    order.startTime,
-    order.endTime,
+    order.startPriceWei,
+    order.endPriceWei,
+    Math.floor(order.startTimeMs / 1000),
+    Math.floor(order.endTimeMs / 1000),
     order.minBpsToSeller,
     order.nonce
   ];
+
+  const nfts = [];
+  for (const nft of order.nfts) {
+    const collection = nft.collectionAddress;
+    const tokens = [];
+    for (const token of nft.tokens) {
+      tokens.push({
+        tokenId: token.tokenId,
+        numTokens: token.numTokens
+      });
+    }
+    nfts.push({
+      collection,
+      tokens
+    });
+  }
+
   const execParams = [order.execParams.complicationAddress, order.execParams.currencyAddress];
   const extraParams = defaultAbiCoder.encode(['address'], [order.extraParams.buyer ?? NULL_ADDRESS]);
 
@@ -472,7 +507,7 @@ function _getCalculatedDigest(chainId: BigNumberish, exchangeAddr: string, order
     defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
   );
   console.log('constraints hash', constraintsHash);
-  const nftsHash = _getNftsHash(order.nfts);
+  const nftsHash = _getNftsHash(nfts);
   const execParamsHash = keccak256(defaultAbiCoder.encode(['address', 'address'], execParams));
   console.log('execParamsHash', execParamsHash);
 
@@ -481,7 +516,7 @@ function _getCalculatedDigest(chainId: BigNumberish, exchangeAddr: string, order
     [
       orderTypeHash,
       order.isSellOrder,
-      order.signerAddress,
+      order.makerAddress,
       constraintsHash,
       nftsHash,
       execParamsHash,
@@ -497,7 +532,7 @@ function _getCalculatedDigest(chainId: BigNumberish, exchangeAddr: string, order
   return digest;
 }
 
-function _getNftsHash(nfts: OrderItem[]): BytesLike {
+function _getNftsHash(nfts: OBOrderItem[]): BytesLike {
   const fnSign = 'OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
   const typeHash = solidityKeccak256(['string'], [fnSign]);
   console.log('Order item type hash', typeHash);
@@ -505,7 +540,7 @@ function _getNftsHash(nfts: OrderItem[]): BytesLike {
   const hashes = [];
   for (const nft of nfts) {
     const hash = keccak256(
-      defaultAbiCoder.encode(['bytes32', 'uint256', 'bytes32'], [typeHash, nft.collection, _getTokensHash(nft.tokens)])
+      defaultAbiCoder.encode(['bytes32', 'uint256', 'bytes32'], [typeHash, nft.collectionAddress, _getTokensHash(nft.tokens)])
     );
     hashes.push(hash);
   }
@@ -515,7 +550,7 @@ function _getNftsHash(nfts: OrderItem[]): BytesLike {
   return nftsHash;
 }
 
-function _getTokensHash(tokens: TokenInfo[]): BytesLike {
+function _getTokensHash(tokens: OBTokenInfo[]): BytesLike {
   const fnSign = 'TokenInfo(uint256 tokenId,uint256 numTokens)';
   const typeHash = solidityKeccak256(['string'], [fnSign]);
   console.log('Token info type hash', typeHash);

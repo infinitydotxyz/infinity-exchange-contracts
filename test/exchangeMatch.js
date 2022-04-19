@@ -231,16 +231,19 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer1.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
-          tokens: [{ tokenId: 0, numTokens: 1 }]
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
+          tokens: [{ tokenId: String(0), numTokens: 1, tokenName: '', imageUrl: '' }]
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       let numItems = 0;
       for (const nft of nfts) {
@@ -250,12 +253,15 @@ describe('Exchange_Match', function () {
         id: orderId,
         chainId,
         isSellOrder: false,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -281,20 +287,23 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer1.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: [
-            { tokenId: 1, numTokens: 1 },
-            { tokenId: 2, numTokens: 1 },
-            { tokenId: 3, numTokens: 1 }
+            { tokenId: String(1), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(2), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(3), numTokens: 1, tokenName: '', imageUrl: '' }
           ]
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       let numItems = 0;
       for (const nft of nfts) {
@@ -304,12 +313,15 @@ describe('Exchange_Match', function () {
         id: orderId,
         chainId,
         isSellOrder: false,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -335,32 +347,38 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer1.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: [
-            { tokenId: 12, numTokens: 1 },
-            { tokenId: 13, numTokens: 1 },
-            { tokenId: 14, numTokens: 1 }
+            { tokenId: String(12), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(13), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(14), numTokens: 1, tokenName: '', imageUrl: '' }
           ]
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       let numItems = 1;
       const order = {
         id: orderId,
         chainId,
         isSellOrder: false,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(10 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(10 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -386,27 +404,33 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer1.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: []
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       const order = {
         id: orderId,
         chainId,
         isSellOrder: false,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems: 1,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -432,27 +456,33 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer1.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: []
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       const order = {
         id: orderId,
         chainId,
         isSellOrder: false,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems: 4,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -478,31 +508,40 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer1.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
-          tokens: [{ tokenId: 11, numTokens: 1 }]
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
+          tokens: [{ tokenId: String(11), numTokens: 1, tokenName: '', imageUrl: '' }]
         },
         {
-          collection: mock721Contract2.address,
+          collectionAddress: mock721Contract2.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: [
-            { tokenId: 0, numTokens: 1 },
-            { tokenId: 1, numTokens: 1 }
+            { tokenId: String(0), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(1), numTokens: 1, tokenName: '', imageUrl: '' }
           ]
         },
         {
-          collection: mock721Contract3.address,
+          collectionAddress: mock721Contract3.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: [
-            { tokenId: 0, numTokens: 1 },
-            { tokenId: 1, numTokens: 1 },
-            { tokenId: 2, numTokens: 1 }
+            { tokenId: String(0), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(1), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(2), numTokens: 1, tokenName: '', imageUrl: '' }
           ]
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       let numItems = 0;
       for (const nft of nfts) {
@@ -512,12 +551,15 @@ describe('Exchange_Match', function () {
         id: orderId,
         chainId,
         isSellOrder: false,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -543,35 +585,47 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer1.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: []
         },
         {
-          collection: mock721Contract2.address,
+          collectionAddress: mock721Contract2.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: []
         },
         {
-          collection: mock721Contract3.address,
+          collectionAddress: mock721Contract3.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: []
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       const order = {
         id: orderId,
         chainId,
         isSellOrder: false,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems: 5,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -597,22 +651,25 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer1.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       const order = {
         id: orderId,
         chainId,
         isSellOrder: false,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems: 1,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -638,22 +695,25 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer1.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       const order = {
         id: orderId,
         chainId,
         isSellOrder: false,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems: 12,
-        startPrice: ethers.utils.parseEther('5'),
-        endPrice: ethers.utils.parseEther('5'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('5').toString(),
+        endPriceWei: ethers.utils.parseEther('5').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -681,16 +741,19 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer2.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
-          tokens: [{ tokenId: 0, numTokens: 1 }]
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
+          tokens: [{ tokenId: String(0), numTokens: 1, tokenName: '', imageUrl: '' }]
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       let numItems = 0;
       for (const nft of nfts) {
@@ -700,12 +763,15 @@ describe('Exchange_Match', function () {
         id: orderId,
         chainId,
         isSellOrder: true,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -736,20 +802,23 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer2.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: [
-            { tokenId: 1, numTokens: 1 },
-            { tokenId: 2, numTokens: 1 },
-            { tokenId: 3, numTokens: 1 }
+            { tokenId: String(1), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(2), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(3), numTokens: 1, tokenName: '', imageUrl: '' }
           ]
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       let numItems = 0;
       for (const nft of nfts) {
@@ -759,12 +828,15 @@ describe('Exchange_Match', function () {
         id: orderId,
         chainId,
         isSellOrder: true,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -790,32 +862,38 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer2.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: [
-            { tokenId: 12, numTokens: 1 },
-            { tokenId: 13, numTokens: 1 },
-            { tokenId: 14, numTokens: 1 }
+            { tokenId: String(12), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(13), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(14), numTokens: 1, tokenName: '', imageUrl: '' }
           ]
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       let numItems = 1;
       const order = {
         id: orderId,
         chainId,
         isSellOrder: true,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(10 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(10 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -841,27 +919,33 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer2.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: []
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       const order = {
         id: orderId,
         chainId,
         isSellOrder: true,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems: 1,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -887,27 +971,33 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer2.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: []
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       const order = {
         id: orderId,
         chainId,
         isSellOrder: true,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems: 4,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -933,31 +1023,40 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer2.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
-          tokens: [{ tokenId: 11, numTokens: 1 }]
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
+          tokens: [{ tokenId: String(11), numTokens: 1, tokenName: '', imageUrl: '' }]
         },
         {
-          collection: mock721Contract2.address,
+          collectionAddress: mock721Contract2.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: [
-            { tokenId: 0, numTokens: 1 },
-            { tokenId: 1, numTokens: 1 }
+            { tokenId: String(0), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(1), numTokens: 1, tokenName: '', imageUrl: '' }
           ]
         },
         {
-          collection: mock721Contract3.address,
+          collectionAddress: mock721Contract3.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: [
-            { tokenId: 0, numTokens: 1 },
-            { tokenId: 1, numTokens: 1 },
-            { tokenId: 2, numTokens: 1 }
+            { tokenId: String(0), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(1), numTokens: 1, tokenName: '', imageUrl: '' },
+            { tokenId: String(2), numTokens: 1, tokenName: '', imageUrl: '' }
           ]
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       let numItems = 0;
       for (const nft of nfts) {
@@ -967,12 +1066,15 @@ describe('Exchange_Match', function () {
         id: orderId,
         chainId,
         isSellOrder: true,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -998,35 +1100,47 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer2.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [
         {
-          collection: mock721Contract1.address,
+          collectionAddress: mock721Contract1.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: []
         },
         {
-          collection: mock721Contract2.address,
+          collectionAddress: mock721Contract2.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: []
         },
         {
-          collection: mock721Contract3.address,
+          collectionAddress: mock721Contract3.address,
+          collectionName: '',
+          profileImage: '',
+
           tokens: []
         }
       ];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       const order = {
         id: orderId,
         chainId,
         isSellOrder: true,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems: 5,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -1052,22 +1166,25 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer2.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       const order = {
         id: orderId,
         chainId,
         isSellOrder: true,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems: 1,
-        startPrice: ethers.utils.parseEther('1'),
-        endPrice: ethers.utils.parseEther('1'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('1').toString(),
+        endPriceWei: ethers.utils.parseEther('1').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -1093,22 +1210,25 @@ describe('Exchange_Match', function () {
       const user = {
         address: signer2.address
       };
-      const chainId = network.config.chainId;
+      const chainId = String(network.config.chainId);
       const nfts = [];
       const execParams = { complicationAddress: obComplication.address, currencyAddress: token.address };
       const extraParams = {};
-      const nonce = ++orderNonce;
+      const nonce = String(++orderNonce);
       const orderId = ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256'], [user.address, nonce, chainId]);
       const order = {
         id: orderId,
         chainId,
         isSellOrder: true,
-        signerAddress: user.address,
+        makerAddress: user.address,
         numItems: 12,
-        startPrice: ethers.utils.parseEther('5'),
-        endPrice: ethers.utils.parseEther('5'),
-        startTime: nowSeconds(),
-        endTime: nowSeconds().add(24 * 60 * 60),
+        startPriceWei: ethers.utils.parseEther('5').toString(),
+        endPriceWei: ethers.utils.parseEther('5').toString(),
+        startTimeMs: nowSeconds().mul(1000).toNumber(),
+        endTimeMs: nowSeconds()
+          .mul(1000)
+          .add(24 * 60 * 60 * 1000)
+          .toNumber(),
         minBpsToSeller: 9000,
         nonce,
         nfts,
@@ -1140,6 +1260,14 @@ describe('Exchange_Match', function () {
       // owners before sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1169,6 +1297,14 @@ describe('Exchange_Match', function () {
       // owners after sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1206,6 +1342,14 @@ describe('Exchange_Match', function () {
       // owners before sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1234,6 +1378,14 @@ describe('Exchange_Match', function () {
       // owners after sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1275,8 +1427,10 @@ describe('Exchange_Match', function () {
           collection,
           tokens: [
             {
-              tokenId: 12,
-              numTokens: 1
+              tokenId: String(12),
+              numTokens: 1,
+              tokenName: '',
+              imageUrl: ''
             }
           ]
         };
@@ -1287,6 +1441,14 @@ describe('Exchange_Match', function () {
       // owners before sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1315,6 +1477,14 @@ describe('Exchange_Match', function () {
       // owners after sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1356,8 +1526,10 @@ describe('Exchange_Match', function () {
           collection,
           tokens: [
             {
-              tokenId: 4,
-              numTokens: 1
+              tokenId: String(4),
+              numTokens: 1,
+              tokenName: '',
+              imageUrl: ''
             }
           ]
         };
@@ -1368,6 +1540,14 @@ describe('Exchange_Match', function () {
       // owners before sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1396,6 +1576,14 @@ describe('Exchange_Match', function () {
       // owners after sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1437,20 +1625,28 @@ describe('Exchange_Match', function () {
           collection,
           tokens: [
             {
-              tokenId: 5,
-              numTokens: 1
+              tokenId: String(5),
+              numTokens: 1,
+              tokenName: '',
+              imageUrl: ''
             },
             {
-              tokenId: 6,
-              numTokens: 1
+              tokenId: String(6),
+              numTokens: 1,
+              tokenName: '',
+              imageUrl: ''
             },
             {
-              tokenId: 7,
-              numTokens: 1
+              tokenId: String(7),
+              numTokens: 1,
+              tokenName: '',
+              imageUrl: ''
             },
             {
-              tokenId: 8,
-              numTokens: 1
+              tokenId: String(8),
+              numTokens: 1,
+              tokenName: '',
+              imageUrl: ''
             }
           ]
         };
@@ -1461,6 +1657,14 @@ describe('Exchange_Match', function () {
       // owners before sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1489,6 +1693,14 @@ describe('Exchange_Match', function () {
       // owners after sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1526,6 +1738,14 @@ describe('Exchange_Match', function () {
       // owners before sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1554,6 +1774,14 @@ describe('Exchange_Match', function () {
       // owners after sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1599,12 +1827,16 @@ describe('Exchange_Match', function () {
             collection,
             tokens: [
               {
-                tokenId: 20,
-                numTokens: 1
+                tokenId: String(20),
+                numTokens: 1,
+                tokenName: '',
+                imageUrl: ''
               },
               {
-                tokenId: 21,
-                numTokens: 1
+                tokenId: String(21),
+                numTokens: 1,
+                tokenName: '',
+                imageUrl: ''
               }
             ]
           };
@@ -1613,8 +1845,10 @@ describe('Exchange_Match', function () {
             collection,
             tokens: [
               {
-                tokenId: 10,
-                numTokens: 1
+                tokenId: String(10),
+                numTokens: 1,
+                tokenName: '',
+                imageUrl: ''
               }
             ]
           };
@@ -1623,12 +1857,16 @@ describe('Exchange_Match', function () {
             collection,
             tokens: [
               {
-                tokenId: 10,
-                numTokens: 1
+                tokenId: String(10),
+                numTokens: 1,
+                tokenName: '',
+                imageUrl: ''
               },
               {
-                tokenId: 11,
-                numTokens: 1
+                tokenId: String(11),
+                numTokens: 1,
+                tokenName: '',
+                imageUrl: ''
               }
             ]
           };
@@ -1641,6 +1879,14 @@ describe('Exchange_Match', function () {
       // owners before sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1669,6 +1915,14 @@ describe('Exchange_Match', function () {
       // owners after sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1709,8 +1963,10 @@ describe('Exchange_Match', function () {
         collection,
         tokens: [
           {
-            tokenId: 15,
-            numTokens: 1
+            tokenId: String(15),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           }
         ]
       };
@@ -1720,6 +1976,14 @@ describe('Exchange_Match', function () {
       // owners before sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1748,6 +2012,14 @@ describe('Exchange_Match', function () {
       // owners after sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
+        console.log('============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1785,64 +2057,97 @@ describe('Exchange_Match', function () {
       const nfts = [];
       const nft1 = {
         collection: mock721Contract1.address,
+        collectionName: '',
+        profileImage: '',
+
         tokens: [
           {
-            tokenId: 30,
-            numTokens: 1
+            tokenId: String(30),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           },
           {
-            tokenId: 31,
-            numTokens: 1
+            tokenId: String(31),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           },
           {
-            tokenId: 32,
-            numTokens: 1
+            tokenId: String(32),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           }
         ]
       };
       const nft2 = {
         collection: mock721Contract2.address,
+        collectionName: '',
+        profileImage: '',
+
         tokens: [
           {
-            tokenId: 35,
-            numTokens: 1
+            tokenId: String(35),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           },
           {
-            tokenId: 36,
-            numTokens: 1
+            tokenId: String(36),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           },
           {
-            tokenId: 37,
-            numTokens: 1
+            tokenId: String(37),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           },
           {
-            tokenId: 38,
-            numTokens: 1
+            tokenId: String(38),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           },
           {
-            tokenId: 39,
-            numTokens: 1
+            tokenId: String(39),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           }
         ]
       };
       const nft3 = {
         collection: mock721Contract3.address,
+        collectionName: '',
+        profileImage: '',
+
         tokens: [
           {
-            tokenId: 20,
-            numTokens: 1
+            tokenId: String(20),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           },
           {
-            tokenId: 21,
-            numTokens: 1
+            tokenId: String(21),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           },
           {
-            tokenId: 22,
-            numTokens: 1
+            tokenId: String(22),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           },
           {
-            tokenId: 23,
-            numTokens: 1
+            tokenId: String(23),
+            numTokens: 1,
+            tokenName: '',
+            imageUrl: ''
           }
         ]
       };
@@ -1856,6 +2161,7 @@ describe('Exchange_Match', function () {
       // owners before sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('Match_AnyCollectionAnyMultipleTokensBuy before sale ============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
@@ -1864,11 +2170,14 @@ describe('Exchange_Match', function () {
       }
 
       // sale price
+      console.log('getting sale price');
       const salePrice = getCurrentSignedOrderPrice(constructedOrder);
 
       // balance before sale
+      console.log('checking balance before sale');
       expect(await token.balanceOf(signer1.address)).to.equal(signer1Balance);
 
+      console.log('estimating gas');
       const gasEstimate = await infinityExchange
         .connect(signer3)
         .estimateGas.matchOrders([sellOrder], [buyOrder], [constructedOrder], false, false);
@@ -1884,6 +2193,7 @@ describe('Exchange_Match', function () {
       // owners after sale
       for (const item of nfts) {
         const collection = item.collection;
+        console.log('Match_AnyCollectionAnyMultipleTokensBuy after sale ============***===========', collection);
         const contract = new ethers.Contract(collection, erc721Abi, signer1);
         for (const token of item.tokens) {
           const tokenId = token.tokenId;
