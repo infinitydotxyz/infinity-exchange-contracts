@@ -1,7 +1,7 @@
 import '@nomiclabs/hardhat-ethers';
 import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-waffle';
-// import 'hardhat-gas-reporter';
+import 'hardhat-gas-reporter';
 
 import './tasks/deploy';
 
@@ -9,7 +9,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 import { parseUnits } from 'ethers/lib/utils';
 
 require('dotenv').config();
-// require('hardhat-contract-sizer');
+require('hardhat-contract-sizer');
 
 export default {
   networks: {
@@ -56,9 +56,9 @@ export default {
   // etherscan: {
   //   apiKey: process.env.POLYGONSCAN_API_KEY
   // }
-  // contractSizer: {
-  //   alphaSort: true,
-  //   runOnCompile: true,
-  //   disambiguatePaths: false
-  // }
+  contractSizer: {
+    alphaSort: true,
+    runOnCompile: true,
+    disambiguatePaths: false
+  }
 } as HardhatUserConfig;
