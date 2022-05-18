@@ -7,7 +7,7 @@ const { erc721Abi } = require('../abi/erc721');
 const { Signer } = require('ethers');
 const { SignerWithAddress } = require('@nomiclabs/hardhat-ethers/signers');
 
-describe('Exchange_Maker_Sell_Taker_Buy_ETH', function () {
+describe('Exchange_ETH_Maker_Sell_Taker_Buy', function () {
   let signers,
     signer1,
     signer2,

@@ -5,7 +5,7 @@ const { prepareOBOrder, getCurrentSignedOrderPrice, signFormattedOrder } = requi
 const { nowSeconds } = require('@infinityxyz/lib/utils');
 const { erc721Abi } = require('../abi/erc721');
 
-describe('Exchange_Creator_Fee_Maker_Sell_Taker_Buy_ETH', function () {
+describe('Exchange_ETH_Creator_Fee_Maker_Sell_Taker_Buy', function () {
   let signers,
     signer1,
     signer2,
