@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.9;
+pragma solidity 0.8.14;
 
 import {OrderTypes} from '../libs/OrderTypes.sol';
 import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
@@ -223,10 +223,7 @@ contract InfinityExchange is IInfinityExchange, ReentrancyGuard, Ownable {
     }
   }
 
-  function batchTransferNFTs(
-    address to,
-    OrderTypes.OrderItem[] calldata items
-  ) external nonReentrant {
+  function batchTransferNFTs(address to, OrderTypes.OrderItem[] calldata items) external nonReentrant {
     _batchTransferNFTs(msg.sender, to, items);
   }
 

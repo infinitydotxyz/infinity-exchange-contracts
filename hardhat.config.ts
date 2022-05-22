@@ -39,8 +39,9 @@ export default {
   solidity: {
     compilers: [
       {
-        version: '0.8.9',
+        version: '0.8.14',
         settings: {
+          viaIR: true,
           optimizer: {
             enabled: true,
             runs: 99999999

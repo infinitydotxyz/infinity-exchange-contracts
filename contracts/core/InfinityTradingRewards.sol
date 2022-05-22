@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.9;
+pragma solidity 0.8.14;
 
 import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
 import {IERC20, SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
@@ -78,10 +78,7 @@ contract InfinityTradingRewards is IInfinityTradingRewards, Ownable, ReentrancyG
     }
   }
 
-  function claimRewards(
-    address currency,
-    uint256 amount
-  ) external override nonReentrant {
+  function claimRewards(address currency, uint256 amount) external override nonReentrant {
     require(earnedRewards[msg.sender][currency] >= amount, 'Not enough rewards to claim');
     earnedRewards[msg.sender][currency] -= amount;
     IERC20(currency).safeTransfer(msg.sender, amount);

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.9;
+pragma solidity 0.8.14;
 
 import {OrderTypes} from '../libs/OrderTypes.sol';
 
@@ -19,9 +19,17 @@ enum StakeLevel {
 }
 
 interface IStaker {
-  function stake(address user, uint256 amount, Duration duration) external;
+  function stake(
+    address user,
+    uint256 amount,
+    Duration duration
+  ) external;
 
-  function changeDuration(uint256 amount, Duration oldDuration, Duration newDuration) external;
+  function changeDuration(
+    uint256 amount,
+    Duration oldDuration,
+    Duration newDuration
+  ) external;
 
   function unstake(uint256 amount) external;
 
