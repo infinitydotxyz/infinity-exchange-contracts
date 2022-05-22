@@ -72,8 +72,8 @@ contract InfinityExchange is IInfinityExchange, ReentrancyGuard, Ownable {
   event NewMatchExecutor(address matchExecutor);
 
   event OrderFulfilled(
-    bytes32 sellOrderHash, // hash of the sell order
-    bytes32 buyOrderHash, // hash of the sell order
+    bytes32 sellOrderHash,
+    bytes32 buyOrderHash,
     address indexed seller,
     address indexed buyer,
     address indexed complication, // address of the complication that defines the execution
