@@ -296,14 +296,6 @@ contract InfinityStaker is IStaker, Ownable, Pausable, ReentrancyGuard {
 
   // ====================================================== ADMIN FUNCTIONS ================================================
 
-  function rescueTokens(
-    address destination,
-    address currency,
-    uint256 amount
-  ) external onlyOwner {
-    IERC20(currency).safeTransfer(destination, amount);
-  }
-
   function rescueETH(address destination) external payable onlyOwner {
     (bool sent, ) = destination.call{value: msg.value}('');
     require(sent, 'Failed to send Ether');
