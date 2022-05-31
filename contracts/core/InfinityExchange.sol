@@ -566,20 +566,6 @@ contract InfinityExchange is IInfinityExchange, ReentrancyGuard, Ownable {
     return (seller, buyer, constructed.execParams[1], execPrice);
   }
 
-  function _getCurrentPrice(OrderTypes.Order calldata order) internal view returns (uint256) {
-    (uint256 startPrice, uint256 endPrice) = (order.constraints[1], order.constraints[2]);
-    (uint256 startTime, uint256 endTime) = (order.constraints[3], order.constraints[4]);
-    uint256 duration = endTime - startTime;
-    uint256 priceDiff = startPrice - endPrice;
-    if (priceDiff == 0 || duration == 0) {
-      return startPrice;
-    }
-    uint256 elapsedTime = block.timestamp - startTime;
-    uint256 portion = elapsedTime > duration ? 1 : elapsedTime / duration;
-    priceDiff = priceDiff * portion;
-    return startPrice - priceDiff;
-  }
-
   function _emitEvent(
     bytes32 sellOrderHash,
     bytes32 buyOrderHash,
