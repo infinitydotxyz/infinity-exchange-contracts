@@ -9,8 +9,7 @@ import {IComplication} from '../interfaces/IComplication.sol';
 import {IStaker, StakeLevel} from '../interfaces/IStaker.sol';
 import {IFeeManager, FeeParty} from '../interfaces/IFeeManager.sol';
 import {IMerkleDistributor} from '../interfaces/IMerkleDistributor.sol';
-
-// import 'hardhat/console.sol';
+import 'hardhat/console.sol';
 
 /**
  * @title InfinityFeeTreasury
@@ -144,8 +143,7 @@ contract InfinityFeeTreasury is IInfinityFeeTreasury, IMerkleDistributor, Ownabl
     address weth
   ) internal {
     // console.log('refunding gas fees to executor for sale executed on behalf of', seller);
-    // todo: check weth transfer gas cost
-    uint256 gasCost = (startGas - gasleft() + 30000) * tx.gasprice;
+    uint256 gasCost = (startGas - gasleft() + 50000) * tx.gasprice;
     // console.log('gasCost:', gasCost);
     IERC20(weth).safeTransferFrom(seller, matchExecutor, gasCost);
   }

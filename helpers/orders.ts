@@ -1,8 +1,7 @@
 import { BigNumber, BigNumberish, BytesLike, constants, Contract } from 'ethers';
 import { defaultAbiCoder, keccak256, solidityKeccak256, splitSignature, _TypedDataEncoder } from 'ethers/lib/utils';
-import { infinityExchangeAbi } from '../abi/infinityExchange';
 import { erc721Abi } from '../abi/erc721';
-import { nowSeconds, trimLowerCase } from '@infinityxyz/lib/utils';
+import { nowSeconds, trimLowerCase } from '../tasks/utils';
 import { erc20Abi } from '../abi/erc20';
 import { JsonRpcSigner } from '@ethersproject/providers';
 
@@ -308,7 +307,6 @@ export async function checkERC721Ownership(user: User, contract: Contract, token
     // console.log('Checking ERC721 on chain ownership');
     const owner = trimLowerCase(await contract.ownerOf(tokenId));
     if (owner !== trimLowerCase(user.address)) {
-      // todo: should continue to check if other nfts are owned
       console.error('Order on chain ownership check failed');
       return false;
     }

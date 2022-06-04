@@ -3,16 +3,12 @@ const { ethers, network } = require('hardhat');
 const { deployContract } = require('../tasks/utils');
 const {
   prepareOBOrder,
-  signOBOrder,
   getCurrentSignedOrderPrice,
-  approveERC721,
   approveERC20,
   signFormattedOrder
 } = require('../helpers/orders');
-const { nowSeconds, trimLowerCase } = require('@infinityxyz/lib/utils');
+const { nowSeconds } = require('../tasks/utils');
 const { erc721Abi } = require('../abi/erc721');
-const { erc20Abi } = require('../abi/erc20');
-const { JsonRpcSigner } = require('@ethersproject/providers');
 
 describe('Exchange_Rewards_Maker_Sell_Taker_Buy', function () {
   let signers,

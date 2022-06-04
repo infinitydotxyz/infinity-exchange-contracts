@@ -5,7 +5,7 @@ import {IRoyaltyEngine} from './interfaces/IRoyaltyEngine.sol';
 
 import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
 
-// import 'hardhat/console.sol';
+import 'hardhat/console.sol';
 
 contract MockRoyaltyEngine is IRoyaltyEngine, Ownable {
   mapping(address => uint16) royaltyBps;

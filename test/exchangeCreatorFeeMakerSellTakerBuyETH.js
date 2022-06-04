@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const { ethers, network } = require('hardhat');
 const { deployContract } = require('../tasks/utils');
 const { prepareOBOrder, getCurrentSignedOrderPrice, signFormattedOrder } = require('../helpers/orders');
-const { nowSeconds } = require('@infinityxyz/lib/utils');
+const { nowSeconds } = require('../tasks/utils');
 const { erc721Abi } = require('../abi/erc721');
 
 describe('Exchange_ETH_Creator_Fee_Maker_Sell_Taker_Buy', function () {

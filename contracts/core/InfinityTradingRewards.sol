@@ -7,8 +7,7 @@ import {IStaker, StakeLevel, Duration} from '../interfaces/IStaker.sol';
 import {EnumerableSet} from '@openzeppelin/contracts/utils/structs/EnumerableSet.sol';
 import {IInfinityTradingRewards} from '../interfaces/IInfinityTradingRewards.sol';
 import {ReentrancyGuard} from '@openzeppelin/contracts/security/ReentrancyGuard.sol';
-
-// import 'hardhat/console.sol';
+import 'hardhat/console.sol';
 
 /**
  * @title InfinityTradingRewards

@@ -3,8 +3,7 @@ pragma solidity 0.8.14;
 
 import {Address} from '@openzeppelin/contracts/utils/Address.sol';
 import {IERC1271} from '@openzeppelin/contracts/interfaces/IERC1271.sol';
-
-// import 'hardhat/console.sol'; // todo: remove this
+import 'hardhat/console.sol';
 
 /**
  * @title SignatureChecker

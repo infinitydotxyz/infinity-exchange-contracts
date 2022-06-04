@@ -4,8 +4,7 @@ pragma solidity 0.8.14;
 import {OrderTypes} from '../libs/OrderTypes.sol';
 import {IComplication} from '../interfaces/IComplication.sol';
 import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
-
-// import 'hardhat/console.sol'; // todo: remove this
+import 'hardhat/console.sol';
 
 /**
  * @title InfinityOrderBookComplication
@@ -16,7 +15,7 @@ contract InfinityOrderBookComplication is IComplication, Ownable {
   using OrderTypes for OrderTypes.OrderItem;
 
   uint256 public immutable PROTOCOL_FEE;
-  uint256 public ERROR_BOUND; // error bound for prices in wei; todo: check if this is reqd
+  uint256 public ERROR_BOUND; // error bound for prices in wei
 
   event NewErrorbound(uint256 errorBound);
 
@@ -97,7 +96,6 @@ contract InfinityOrderBookComplication is IComplication, Ownable {
     return isSellTimeValid && isBuyTimeValid;
   }
 
-  // todo: make this function public
   function _isAmountValid(
     OrderTypes.Order calldata sell,
     OrderTypes.Order calldata buy,

@@ -7,8 +7,7 @@ import {IFeeManager, FeeParty} from '../interfaces/IFeeManager.sol';
 import {IOwnable} from '../interfaces/IOwnable.sol';
 import {IRoyaltyEngine} from '../interfaces/IRoyaltyEngine.sol';
 import {IFeeRegistry} from '../interfaces/IFeeRegistry.sol';
-
-// import 'hardhat/console.sol';
+import 'hardhat/console.sol';
 
 /**
  * @title InfinityCreatorsFeeManager

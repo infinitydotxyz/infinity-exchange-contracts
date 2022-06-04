@@ -6,8 +6,7 @@ import {IERC20, SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeE
 import {Pausable} from '@openzeppelin/contracts/security/Pausable.sol';
 import {IStaker, Duration, StakeLevel} from '../interfaces/IStaker.sol';
 import {ReentrancyGuard} from '@openzeppelin/contracts/security/ReentrancyGuard.sol';
-
-// import 'hardhat/console.sol'; // todo: remove this
+import 'hardhat/console.sol';
 
 contract InfinityStaker is IStaker, Ownable, Pausable, ReentrancyGuard {
   using SafeERC20 for IERC20;

@@ -3,15 +3,12 @@ const { ethers, network } = require('hardhat');
 const { deployContract } = require('../tasks/utils');
 const {
   prepareOBOrder,
-  signOBOrder,
   getCurrentSignedOrderPrice,
-  approveERC721,
   approveERC20,
   signFormattedOrder
 } = require('../helpers/orders');
-const { nowSeconds, trimLowerCase, NULL_ADDRESS } = require('@infinityxyz/lib/utils');
+const { nowSeconds, NULL_ADDRESS } = require('../tasks/utils');
 const { erc721Abi } = require('../abi/erc721');
-const { erc20Abi } = require('../abi/erc20');
 
 describe('Exchange_Creator_Fee_Maker_Sell_Taker_Buy', function () {
   let signers,

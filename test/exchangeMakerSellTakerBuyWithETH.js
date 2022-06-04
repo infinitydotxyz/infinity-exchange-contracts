@@ -2,10 +2,8 @@ const { expect } = require('chai');
 const { ethers, network } = require('hardhat');
 const { deployContract } = require('../tasks/utils');
 const { prepareOBOrder, getCurrentSignedOrderPrice, signFormattedOrder } = require('../helpers/orders');
-const { nowSeconds } = require('@infinityxyz/lib/utils');
+const { nowSeconds } = require('../tasks/utils');
 const { erc721Abi } = require('../abi/erc721');
-const { Signer } = require('ethers');
-const { SignerWithAddress } = require('@nomiclabs/hardhat-ethers/signers');
 
 describe('Exchange_ETH_Maker_Sell_Taker_Buy', function () {
   let signers,

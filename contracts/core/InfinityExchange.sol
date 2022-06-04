@@ -15,8 +15,7 @@ import {IERC165} from '@openzeppelin/contracts/interfaces/IERC165.sol';
 import {IERC721} from '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 import {IERC1155} from '@openzeppelin/contracts/token/ERC1155/IERC1155.sol';
 import {IERC20, SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
-
-// import 'hardhat/console.sol'; // todo: remove this
+import 'hardhat/console.sol';
 
 /**
  * @title InfinityExchange
@@ -78,7 +77,7 @@ contract InfinityExchange is IInfinityExchange, ReentrancyGuard, Ownable {
     address indexed buyer,
     address indexed complication, // address of the complication that defines the execution
     address currency, // token address of the transacting currency
-    OrderTypes.OrderItem[] nfts, // nfts sold; todo: check actual output
+    OrderTypes.OrderItem[] nfts, // nfts sold;
     uint256 amount // amount spent on the order
   );
 
